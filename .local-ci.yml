@@ -1,0 +1,11 @@
+
+env:
+  - LOCAL_REPOS_HOST=172.17.0.2
+  - PIP_OPTS="--index-url=http://${LOCAL_REPOS_HOST}/repo/pypi/simple/ --trusted-host=${LOCAL_REPOS_HOST}"
+
+docker-images:
+  python:2.7: ownport/dtguess-dev-env:py2.7
+
+docker-opts:
+  name: dtguess-dev-local-ci
+  hostname: dtguess-dev-local-ci
