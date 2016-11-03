@@ -1,8 +1,18 @@
 
-from types import TYPES
+from collections import defaultdict
+
+import types
 
 
-def type_guess(rows, types=TYPES, strict=False):
+def get_default_instances():
+
+    return [
+        types.StringType(), types.DecimalType(), types.IntegerType(),
+        types.DateType('%Y-%m-%d %H:%M:%S'), types.BooleanType()
+    ]
+
+
+def type_guess(rows, types=types.DEFAULT_TYPES, strict=False):
     """ The type guesser aggregates the number of successful
     conversions of each column to each type, weights them by a
     fixed type priority and select the most probable type for
@@ -39,7 +49,7 @@ def type_guess(rows, types=TYPES, strict=False):
         # we just set the guessed type to string
         for i, v in enumerate(at_least_one_value):
             if not v:
-                guesses[i] = {StringType(): 0}
+                guesses[i] = {types.StringType(): 0}
     else:
         for i, row in enumerate(rows):
             diff = len(row) - len(guesses)
@@ -47,7 +57,7 @@ def type_guess(rows, types=TYPES, strict=False):
                 guesses.append(defaultdict(int))
             for i, cell in enumerate(row):
                 # add string guess so that we have at least one guess
-                guesses[i][StringType()] = guesses[i].get(StringType(), 0)
+                guesses[i][types.StringType()] = guesses[i].get(types.StringType(), 0)
                 if not cell.value:
                     continue
                 for type in type_instances:
