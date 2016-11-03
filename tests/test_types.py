@@ -5,6 +5,28 @@ import datetime
 
 from dtguess import types
 
+
+def test_cell_type():
+
+    c = types.CellType()
+    assert isinstance(c, types.CellType)
+
+    c.result_type = str
+    assert c.test("cell") == True
+
+    c.result_type = unicode
+    assert c.test(u"cell") == True
+
+    c.result_type = int
+    assert c.test(123) == True
+
+def test_cell_type_cast():
+
+    assert types.CellType().cast('test') == 'test'
+    assert types.CellType().cast(12345) == 12345
+    assert types.CellType().cast(None) == None
+
+
 def test_string_type():
 
     s = types.StringType()
@@ -12,9 +34,18 @@ def test_string_type():
 
     assert s.cast(1) == "1"
     assert s.cast(True) == "True"
-    assert s.cast('1') == "1"
+    assert s.cast('abc') == "abc"
 
     assert s.cast(None) != "None"
+
+
+def test_string_type_test():
+
+    s = types.StringType()
+    assert s.test(5) == True
+    assert s.test('5') == True
+    assert s.test(True) == True
+    assert s.test(None) == True
 
 
 def test_integer_type():
@@ -68,8 +99,6 @@ def test_boolean_type():
     assert b.cast(True) == True
     assert b.cast('') == None
     assert b.cast(' ') == None
-    assert b.cast(0) == False
-    assert b.cast(1) == True
     assert b.cast('0') == False
     assert b.cast('1') == True
     assert b.cast('  0') == False
@@ -113,9 +142,9 @@ def test_date_type():
 
 
 
-def test_date_type_instances():
+def test_date_type_sets_instances():
 
-    di = types.DateType.instances()
+    di = types.DateTypeSets.instances()
     for i in di:
         assert isinstance(i, types.DateType)
 

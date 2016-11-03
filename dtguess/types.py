@@ -56,9 +56,6 @@ class CellType(object):
         except:
             return False
 
-    @classmethod
-    def instances(cls):
-        return [cls()]
 
     def cast(self, value):
         """ Convert the value to the type. This may throw
@@ -96,7 +93,7 @@ class IntegerType(CellType):
     result_type = int
 
     def cast(self, value):
-        
+
         if value in ('', None):
             return None
 
@@ -123,7 +120,10 @@ class DecimalType(CellType):
         try:
             return decimal.Decimal(value)
         except:
-            raise ValueError('Invalid decimal: %s' % value)
+            value = locale.atof(value)
+            if sys.version_info < (2, 7):
+                value = str(value)
+            return decimal.Decimal(value)
 
 
 class BooleanType(CellType):
@@ -132,8 +132,8 @@ class BooleanType(CellType):
     """
     guessing_weight = 7
     result_type = bool
-    true_values = ('yes', 't', 'true', '1', 1)
-    false_values = ('no', 'f', 'false', '0', 0)
+    true_values = ('yes', 't', 'true', '1')
+    false_values = ('no', 'f', 'false', '0')
 
     def __init__(self, true_values=None, false_values=None):
 
@@ -144,7 +144,6 @@ class BooleanType(CellType):
 
     def cast(self, value):
 
-        print type(value)
         if isinstance(value, bool):
             return value
         if isinstance(value, (str, unicode)):
@@ -171,10 +170,6 @@ class DateType(CellType):
 
         self.format = format
 
-    @classmethod
-    def instances(cls):
-
-        return [cls(v) for v in cls.formats]
 
     def test(self, value):
 
@@ -206,6 +201,15 @@ class DateType(CellType):
         return hash(self.__class__) + hash(self.format)
 
 
+class DateTypeSets(DateType):
+
+    @classmethod
+    def instances(cls):
+
+        return [cls(v) for v in cls.formats]
+
+
+
 class DateUtilType(CellType):
     """ The date util type uses the dateutil library to
     parse the dates. The advantage of this type over
@@ -227,4 +231,4 @@ class DateUtilType(CellType):
         return parser.parse(value)
 
 
-TYPES = [StringType, DecimalType, IntegerType, DateType, BooleanType]
+DEFAULT_TYPES = [StringType, DecimalType, IntegerType, DateType, BooleanType]
