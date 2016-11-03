@@ -6,7 +6,7 @@ clean:
 	@ echo "[INFO] Cleaning directory:" $(shell pwd)/.local-ci
 	@ rm -rf $(shell pwd)/.local-ci
 	@ echo "[INFO] Cleaning directory:" $(shell pwd)/dtguess.egg-info
-	@ rm -rf $(shell pwd)/scrapets.egg-info
+	@ rm -rf $(shell pwd)/dtguess.egg-info
 	@ echo "[INFO] Cleaning directory:" $(shell pwd)/bin
 	@ rm -rf $(shell pwd)/bin
 	@ echo "[INFO] Cleaning files: *.pyc"
