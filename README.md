@@ -1,5 +1,7 @@
 # dtguess
 
+[![Build Status](https://travis-ci.org/ownport/data-type-guess.svg?branch=master)](https://travis-ci.org/ownport/data-type-guess)
+
 Data type guessing library
 
 ## How to install
