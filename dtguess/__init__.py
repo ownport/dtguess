@@ -13,4 +13,6 @@ sys.path.insert(0, os.path.join(os.path.dirname(path), 'vendor/'))
 from types import StringType, IntegerType, DecimalType, BooleanType, \
                 DateType,  DateUtilType
 
-from utils import type_guess
+from guesses import CellGuess
+
+# from utils import guess, type_guess
