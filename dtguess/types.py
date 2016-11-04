@@ -34,6 +34,10 @@ else:  # i.e. PY3
     string_types = (str,)
 
 
+class DefaultCastNotMacthed(Exception):
+    pass
+
+
 class CellType(object):
     """ A cell type maintains information about the format
     of the cell, providing methods to check if a type is
@@ -48,25 +52,36 @@ class CellType(object):
         """ Test if the value is of the given type. The
         default implementation calls ``cast`` and checks if
         that throws an exception. True or False"""
-        if isinstance(value, self.result_type):
-            return True
+
         try:
-            self.cast(value)
-            return True
+            cast_result = self.cast(value)
         except:
             return False
+
+        if not cast_result:
+            return False
+
+        return True
 
 
     def cast(self, value):
         """ Convert the value to the type. This may throw
-        a quasi-random exception if conversion fails. """
-        return value
+            a quasi-random exception if conversion fails.
+        """
+        if value in ('', None):
+            return None
+        if self.result_type and isinstance(value, self.result_type):
+            return value
+        raise DefaultCastNotMacthed()
+
 
     def __eq__(self, other):
         return self.__class__ == other.__class__
 
+
     def __hash__(self):
         return hash(self.__class__)
+
 
     def __repr__(self):
         return self.__class__.__name__.rsplit('Type', 1)[0]
@@ -77,10 +92,13 @@ class StringType(CellType):
     result_type = unicode_string
 
     def cast(self, value):
-        if value is None:
-            return None
-        if isinstance(value, self.result_type):
-            return value
+
+        try:
+            return super(StringType, self).cast(value)
+        except DefaultCastNotMacthed:
+            pass
+
+        print value, self.result_type
         try:
             return unicode_string(value)
         except UnicodeEncodeError:
@@ -94,8 +112,10 @@ class IntegerType(CellType):
 
     def cast(self, value):
 
-        if value in ('', None):
-            return None
+        try:
+            return super(IntegerType, self).cast(value)
+        except DefaultCastNotMacthed:
+            pass
 
         try:
             value = float(value)
@@ -115,8 +135,11 @@ class DecimalType(CellType):
 
     def cast(self, value):
 
-        if value in ('', None):
-            return None
+        try:
+            return super(DecimalType, self).cast(value)
+        except DefaultCastNotMacthed:
+            pass
+
         try:
             return decimal.Decimal(value)
         except:
@@ -144,13 +167,13 @@ class BooleanType(CellType):
 
     def cast(self, value):
 
-        if isinstance(value, bool):
-            return value
         if isinstance(value, (str, unicode)):
             value = value.strip().lower()
+        try:
+            return super(BooleanType, self).cast(value)
+        except DefaultCastNotMacthed:
+            pass
 
-        if value in ('', None):
-            return None
         if value in self.true_values:
             return True
         if value in self.false_values:
@@ -179,10 +202,11 @@ class DateType(CellType):
 
     def cast(self, value):
 
-        if isinstance(value, self.result_type):
-            return value
-        if value in ('', None):
-            return None
+        try:
+            return super(DateType, self).cast(value)
+        except DefaultCastNotMacthed:
+            pass
+
         if self.format is None:
             return value
         return datetime.datetime.strptime(value, self.format)
@@ -226,8 +250,11 @@ class DateUtilType(CellType):
         return CellType.test(self, value)
 
     def cast(self, value):
-        if value in ('', None):
-            return None
+
+        try:
+            return super(DateUtilType, self).cast(value)
+        except DefaultCastNotMacthed:
+            pass
         return parser.parse(value)
 
 
