@@ -22,9 +22,12 @@ def test_cell_type():
 
 def test_cell_type_cast():
 
-    assert types.CellType().cast('test') == 'test'
-    assert types.CellType().cast(12345) == 12345
-    assert types.CellType().cast(None) == None
+    ct = types.CellType()
+    assert ct.cast('') == None
+    assert ct.cast(None) == None
+
+    with pytest.raises(types.DefaultCastNotMacthed):
+        assert ct.cast('abcd') == 'abcd'
 
 
 def test_string_type():
@@ -45,7 +48,7 @@ def test_string_type_test():
     assert s.test(5) == True
     assert s.test('5') == True
     assert s.test(True) == True
-    assert s.test(None) == True
+    assert s.test(None) == False
 
 
 def test_integer_type():
@@ -105,6 +108,7 @@ def test_boolean_type():
     assert b.cast('  1') == True
     assert b.cast('F') == False
     assert b.cast('T') == True
+    assert b.cast(None) == None
 
     with pytest.raises(ValueError):
         assert b.cast('Fault') == False
