@@ -14,5 +14,6 @@ from types import StringType, IntegerType, DecimalType, BooleanType, \
                 DateType,  DateUtilType
 
 from guesses import CellGuess
+from guesses import ColumnGuess
 
 # from utils import guess, type_guess
