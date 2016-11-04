@@ -1,6 +1,8 @@
 # dtguess
 
 [![Build Status](https://travis-ci.org/ownport/data-type-guess.svg?branch=master)](https://travis-ci.org/ownport/data-type-guess)
+[![codecov](https://codecov.io/gh/ownport/data-type-guess/branch/master/graph/badge.svg)](https://codecov.io/gh/ownport/data-type-guess)
+
 
 Data type guessing library
 
@@ -17,7 +19,7 @@ from dtguess import StringType, IntegerType, DecimalType, BooleanType, \
 
 from dtguess import CellGuess
 
-assert CellGuess().guess(None) == [BooleanType()]
+assert CellGuess().guess(None) == []
 
 assert CellGuess().guess(5) == [IntegerType()]
 assert CellGuess().guess('5') == [IntegerType()]
