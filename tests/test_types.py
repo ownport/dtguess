@@ -68,6 +68,15 @@ def test_integer_type():
     with pytest.raises(ValueError):
         assert i.cast('5.01') == 5
 
+def test_integer_type_test():
+
+    i = types.IntegerType()
+    assert i.test('a') == False
+    assert i.test('b') == False
+    assert i.test('c') == False
+    assert i.test('2') == True
+    assert i.test('4') == True
+
 
 def test_decimal_type():
 
