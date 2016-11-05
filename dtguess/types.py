@@ -98,7 +98,6 @@ class StringType(CellType):
         except DefaultCastNotMacthed:
             pass
 
-        print value, self.result_type
         try:
             return unicode_string(value)
         except UnicodeEncodeError:
