@@ -39,9 +39,10 @@ class Guess(object):
 
 class CellGuess(Guess):
 
-    def guess(self, value):
+    def guess(self, value, clear=True):
 
-        self.clear()
+        if clear:
+            self.clear()
         for t in self._type_instances:
             if t.test(value) and t not in self._guesses:
                 self._guesses[t] = 1
@@ -56,12 +57,13 @@ class ColumnGuess(Guess):
         super(ColumnGuess, self).__init__(type_instances)
         self._cells_count = 0
 
-    def guess(self, column):
+    def guess(self, column, clear=True):
 
         if not isinstance(column, (list, tuple)):
             raise RuntimeError('The column shall be a list or tuple of cells, %s' % type(column))
 
-        self.clear()
+        if clear:
+            self.clear()
         cell_guess = CellGuess(self._type_instances)
         for ci, cell in enumerate(column):
             for _cell_type in cell_guess.guess(cell):
