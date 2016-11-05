@@ -1,6 +1,7 @@
 
 
 from utils import get_default_instances
+from collections import Counter
 
 
 class Guess(object):
@@ -10,21 +11,41 @@ class Guess(object):
         if not isinstance(type_instances, (list, tuple)):
             raise RuntimeError('Type instances shall be list or tuple of types, %s' % type(type_instances))
         self._type_instances = type_instances
+        self._guesses = dict()
+
+    def clear(self):
+        ''' clear previuos guesses
+        '''
+        self._guesses = dict()
+
+    def max_weight(self):
+        ''' returns instance type(-s) with max weight
+        '''
+        if len(self._guesses) > 0:
+            max_weight = max([g.guessing_weight for g in self._guesses])
+            return [g for g in self._guesses if g.guessing_weight == max_weight]
+        else:
+            return []
+
+    def min_weight(self):
+        ''' returns instance type(-s) with min weight
+        '''
+        if len(self._guesses) > 0:
+            min_weight = min([g.guessing_weight for g in self._guesses])
+            return [g for g in self._guesses if g.guessing_weight == min_weight]
+        else:
+            return []
 
 
 class CellGuess(Guess):
 
     def guess(self, value):
 
-        guesses = []
+        self.clear()
         for t in self._type_instances:
-            if t.test(value):
-                guesses.append((t.guessing_weight, t))
-        if len(guesses) > 0:
-            max_weight = max([g[0] for g in guesses])
-            return [g[1] for g in guesses if g[0] == max_weight]
-        else:
-            return []
+            if t.test(value) and t not in self._guesses:
+                self._guesses[t] = 1
+        return self.max_weight()
 
 
 class ColumnGuess(Guess):
@@ -33,15 +54,14 @@ class ColumnGuess(Guess):
     def __init__(self, type_instances=get_default_instances()):
 
         super(ColumnGuess, self).__init__(type_instances)
-        self._cells = 0
-        self._guesses = dict()
-
+        self._cells_count = 0
 
     def guess(self, column):
 
         if not isinstance(column, (list, tuple)):
             raise RuntimeError('The column shall be a list or tuple of cells, %s' % type(column))
 
+        self.clear()
         cell_guess = CellGuess(self._type_instances)
         for ci, cell in enumerate(column):
             for _cell_type in cell_guess.guess(cell):
@@ -50,11 +70,14 @@ class ColumnGuess(Guess):
                 else:
                     self._guesses[_cell_type] += 1
 
-        self._cells = ci + 1 if ci else 0
-        return self._cells, self._guesses
+        if len(self._guesses) > 0:
+            self._cells_count = ci + 1
+            return self.min_weight()
+        else:
+            return None
 
 
     def stats(self):
         ''' return guessing stats
         '''
-        return self._cells, self._guesses
+        return {'cells_count': self._cells_count, 'guesses': self._guesses}
