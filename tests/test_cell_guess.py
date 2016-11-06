@@ -1,9 +1,9 @@
 
-from dtguess import StringType, IntegerType, DecimalType, BooleanType, \
+from dtguess.types import StringType, IntegerType, DecimalType, BooleanType, \
                 DateType,  DateUtilType
 
-from dtguess import CellGuess
-from dtguess import ColumnGuess
+from dtguess.guesses import CellGuess
+from dtguess.guesses import ColumnGuess
 
 
 def test_cell_guess_basic_types():
