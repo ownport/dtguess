@@ -17,6 +17,7 @@ install:
 
 script:
   - pip install -r requirements.txt
+  - python setup.py sdist
   - pip install --editable .
   - make test-all-with-coverage
 
