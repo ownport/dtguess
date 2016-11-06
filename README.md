@@ -1,7 +1,7 @@
 # dtguess
 
-[![Build Status](https://travis-ci.org/ownport/data-type-guess.svg?branch=master)](https://travis-ci.org/ownport/data-type-guess)
-[![codecov](https://codecov.io/gh/ownport/data-type-guess/branch/master/graph/badge.svg)](https://codecov.io/gh/ownport/data-type-guess)
+[![Build Status](https://travis-ci.org/ownport/dtguess.svg?branch=master)](https://travis-ci.org/ownport/dtguess)
+[![codecov](https://codecov.io/gh/ownport/dtguess/branch/master/graph/badge.svg)](https://codecov.io/gh/ownport/dtguess)
 
 
 Data type guessing library
