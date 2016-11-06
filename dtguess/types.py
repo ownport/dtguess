@@ -12,8 +12,7 @@ import decimal
 import datetime
 
 
-import dateutil.parser as parser
-
+from dateutil import parser
 from collections import defaultdict
 
 from dateparser import DATE_FORMATS, is_date
